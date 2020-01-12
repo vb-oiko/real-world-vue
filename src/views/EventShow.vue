@@ -35,24 +35,14 @@
 <script>
 import Vue from "vue";
 import EventService from "@/services/EventService";
+import { mapState } from "vuex";
 
 export default Vue.extend({
   props: ["id"],
-
-  data() {
-    return {
-      event: {}
-    };
-  },
+  computed: mapState(["event"]),
 
   created() {
-    EventService.getEvent(this.id)
-      .then(response => {
-        this.event = response.data;
-      })
-      .catch(error => {
-        console.warn("There was an eroor: " + error.response);
-      });
+    this.$store.dispatch("fetchEvent", parseInt(this.id));
   }
 });
 </script>

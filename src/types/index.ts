@@ -23,4 +23,6 @@ export interface AppState {
   };
   categories: string[];
   events: MyEvent[];
+  eventsTotal: number;
+  event: MyEvent | null;
 }
