@@ -1,25 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { AppState, User, MyEvent } from "@/types";
+import EventService from "@/services/EventService";
 
 Vue.use(Vuex);
-export type Event = {};
-
-export type AppState = {
-  user: {
-    id: string;
-    name: string;
-  };
-  categories: string[];
-  events: {
-    id: number;
-    title: string;
-    organizer: string;
-  }[];
-};
 
 export default new Vuex.Store({
   state: {
-    user: { id: "abc123", name: "Adam Jahr" },
+    user: { id: "abc123", name: "Adam Jahr" } as User,
     categories: [
       "sustainability",
       "nature",
@@ -29,15 +17,20 @@ export default new Vuex.Store({
       "food",
       "community"
     ],
-    events: [
-      { id: 1, title: "...", organizer: "..." },
-      { id: 2, title: "...", organizer: "..." },
-      { id: 3, title: "...", organizer: "..." },
-      { id: 4, title: "...", organizer: "..." }
-    ]
+    events: [] as MyEvent[]
   } as AppState,
-  mutations: {},
-  actions: {},
+  mutations: {
+    ADD_EVENT(state: AppState, event: MyEvent) {
+      state.events.push(event);
+    }
+  },
+  actions: {
+    createEvent({ commit }, event: MyEvent) {
+      return EventService.postEvent(event).then(() => {
+        commit("ADD_EVENT", event);
+      });
+    }
+  },
   getters: {
     catLength: (state: AppState): number => state.categories.length,
     getEventById: (state: AppState) => (id: number) =>

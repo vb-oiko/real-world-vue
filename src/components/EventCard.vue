@@ -6,17 +6,26 @@
     <div class="event-card -shadow">
       <span class="eyebrow">{{ event.date }} on {{ event.time }}</span>
       <h4 class="title">{{ event.title }}</h4>
-      <base-icon name="users">{{ event.attendees.length }} attending</base-icon>
+      <base-icon name="users">{{ attending }} attending</base-icon>
     </div>
   </router-link>
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   props: {
     event: Object
+  },
+  computed: {
+    attending() {
+      return (this as any).event.attendees
+        ? (this as any).event.attendees.length
+        : 0;
+    }
   }
-};
+});
 </script>
 
 <style scoped>
