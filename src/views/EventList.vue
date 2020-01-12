@@ -1,7 +1,7 @@
 <template>
   <div class="about">
-    <h1>Events Listing</h1>
-    <event-card v-for="event in events" :key="event.id" :event="event" />
+    <h1>Events for {{ user.user.name }}</h1>
+    <event-card v-for="event in event.events" :key="event.id" :event="event" />
     <template v-if="page != 1">
       <router-link
         :to="{ name: 'event-list', query: { page: page - 1 } }"
@@ -13,7 +13,7 @@
       <span style="fontWeight:600; color: grey;">Previuos Page</span>
     </template>
     |
-    <template v-if="page * perPage < eventsTotal">
+    <template v-if="page * perPage < event.eventsTotal">
       <router-link
         :to="{ name: 'event-list', query: { page: page + 1 } }"
         rel="next"
@@ -42,13 +42,13 @@ export default Vue.extend({
     page() {
       return parseInt(this.$route.query.page as string) || 1;
     },
-    ...mapState(["events", "eventsTotal"]),
+    ...mapState(["event", "user"]),
     perPage() {
       return PER_PAGE;
     }
   },
   created() {
-    this.$store.dispatch("fetchEvents", {
+    this.$store.dispatch("event/fetchEvents", {
       perPage: PER_PAGE,
       page: (this as any).page
     });

@@ -17,11 +17,17 @@ export interface MyEvent {
 }
 
 export interface AppState {
+  categories: string[];
+}
+
+export interface UserState {
   user: {
     id: string;
     name: string;
   };
-  categories: string[];
+}
+
+export interface EventState {
   events: MyEvent[];
   eventsTotal: number;
   event: MyEvent | null;
