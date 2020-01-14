@@ -32,3 +32,13 @@ export interface EventState {
   eventsTotal: number;
   event: MyEvent | null;
 }
+
+export interface Notification {
+  id: number;
+  type: string;
+  message: string;
+}
+
+export interface NotificationState {
+  notifications: Notification[];
+}

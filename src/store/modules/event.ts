@@ -1,5 +1,5 @@
 import EventService from "@/services/EventService";
-import { MyEvent, EventState } from "@/types";
+import { MyEvent, EventState, Notification, NotificationState } from "@/types";
 
 export const namespaced = true;
 
@@ -24,14 +24,35 @@ export const mutations = {
   }
 };
 export const actions = {
-  createEvent({ commit }: { commit: Function }, event: MyEvent) {
-    return EventService.postEvent(event).then(() => {
-      commit("ADD_EVENT", event);
-    });
+  createEvent(
+    { commit, dispatch }: { commit: Function; dispatch: Function },
+    event: MyEvent
+  ) {
+    return EventService.postEvent(event)
+      .then(() => {
+        commit("ADD_EVENT", event);
+
+        const notification = {
+          type: "success",
+          message: "Your event has been created"
+        } as Notification;
+
+        dispatch("notification/add", notification, { root: true });
+      })
+      .catch(error => {
+        const notification = {
+          type: "error",
+          message: "There was an error creating your event: " + error.message
+        } as Notification;
+
+        dispatch("notification/add", notification, { root: true });
+
+        throw error;
+      });
   },
 
   fetchEvents(
-    { commit }: { commit: Function },
+    { commit, dispatch }: { commit: Function; dispatch: Function },
     { perPage, page }: { perPage: number; page: number }
   ) {
     return EventService.getEvents(perPage, page)
@@ -40,12 +61,21 @@ export const actions = {
         commit("SET_EVENTS", response.data);
       })
       .catch(error => {
-        console.warn("There was an eroor: " + error.response);
+        const notification = {
+          type: "error",
+          message: "There was an error fetching events: " + error.message
+        } as Notification;
+
+        dispatch("notification/add", notification, { root: true });
       });
   },
 
   fetchEvent(
-    { commit, getters }: { commit: Function; getters: eventGetters },
+    {
+      commit,
+      getters,
+      dispatch
+    }: { commit: Function; getters: eventGetters; dispatch: Function },
     eventId: number
   ) {
     const event = getters.getEventById(eventId);
@@ -57,7 +87,12 @@ export const actions = {
           commit("SET_EVENT", response.data);
         })
         .catch(error => {
-          console.warn("There was an eroor: " + error.response);
+          const notification = {
+            type: "error",
+            message: "There was an error fetching event: " + error.message
+          } as Notification;
+
+          dispatch("notification/add", notification, { root: true });
         });
     }
   }
