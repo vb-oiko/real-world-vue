@@ -305,17 +305,17 @@
       "attendies": []
     },
     {
-      "id": 7812128,
+      "id": 104182,
       "user": {
         "id": "abc123",
         "name": "Adam"
       },
-      "category": "",
+      "category": "animal welfare",
       "organizer": {
         "id": "abc123",
         "name": "Adam"
       },
-      "title": "",
+      "title": "Puppy picnic",
       "description": "",
       "location": "",
       "date": "",

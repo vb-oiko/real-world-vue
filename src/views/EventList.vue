@@ -13,7 +13,7 @@
       <span style="fontWeight:600; color: grey;">Previuos Page</span>
     </template>
     |
-    <template v-if="page * perPage < event.eventsTotal">
+    <template v-if="page * event.perPage < event.eventsTotal">
       <router-link
         :to="{ name: 'event-list', query: { page: page + 1 } }"
         rel="next"
@@ -30,28 +30,41 @@
 import Vue from "vue";
 import EventCard from "../components/EventCard.vue";
 import { mapState } from "vuex";
+import store from "@/store";
 
-const PER_PAGE = 3;
+function getPageEvents(routeTo: any, next: Function) {
+  const curentPage = parseInt(routeTo.query.page as string) || 1;
+  store
+    .dispatch("event/fetchEvents", {
+      page: curentPage
+    })
+    .then(() => {
+      routeTo.params.page = curentPage;
+      next();
+    });
+}
 
 export default Vue.extend({
+  props: {
+    page: {
+      type: Number,
+      required: true
+    }
+  },
   components: {
     EventCard
   },
 
-  computed: {
-    page() {
-      return parseInt(this.$route.query.page as string) || 1;
-    },
-    ...mapState(["event", "user"]),
-    perPage() {
-      return PER_PAGE;
-    }
+  beforeRouteEnter(routeTo: any, routeFrom, next) {
+    getPageEvents(routeTo, next);
   },
-  created() {
-    this.$store.dispatch("event/fetchEvents", {
-      perPage: PER_PAGE,
-      page: (this as any).page
-    });
+
+  beforeRouteUpdate(routeTo: any, routeFrom, next) {
+    getPageEvents(routeTo, next);
+  },
+
+  computed: {
+    ...mapState(["event", "user"])
   }
 });
 </script>

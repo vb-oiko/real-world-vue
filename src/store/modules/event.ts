@@ -6,7 +6,8 @@ export const namespaced = true;
 export const state = {
   events: [] as MyEvent[],
   event: null,
-  eventsTotal: 0
+  eventsTotal: 0,
+  perPage: 3
 };
 
 export const mutations = {
@@ -52,10 +53,14 @@ export const actions = {
   },
 
   fetchEvents(
-    { commit, dispatch }: { commit: Function; dispatch: Function },
-    { perPage, page }: { perPage: number; page: number }
+    {
+      commit,
+      dispatch,
+      state
+    }: { commit: Function; dispatch: Function; state: any },
+    { page }: { page: number }
   ) {
-    return EventService.getEvents(perPage, page)
+    return EventService.getEvents(state.perPage, page)
       .then(response => {
         commit("SET_EVENTS_TOTAL", parseInt(response.headers["x-total-count"]));
         commit("SET_EVENTS", response.data);

@@ -60,6 +60,8 @@ import Vue, { VueConstructor } from "vue";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapGetters } from "vuex";
 import { AppState, User, MyEvent } from "@/types";
+import NProgress from "nprogress";
+import nProgress from "nprogress";
 
 export default Vue.extend({
   components: {
@@ -75,6 +77,7 @@ export default Vue.extend({
   },
   methods: {
     createEvent() {
+      NProgress.start();
       this.$store
         .dispatch("event/createEvent", this.event)
         .then(() => {
@@ -86,6 +89,7 @@ export default Vue.extend({
         })
         .catch(() => {
           console.warn("There was a problem creating the event");
+          NProgress.done();
         });
     },
 
