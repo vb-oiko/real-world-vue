@@ -35,18 +35,14 @@
 <script>
 import Vue from "vue";
 import EventService from "@/services/EventService";
-import { mapState, mapActions } from "vuex";
 
 export default Vue.extend({
-  props: ["id"],
-  computed: mapState({
-    event: state => state.event.event
-  }),
-
-  created() {
-    this.fetchEvent(parseInt(this.id));
-  },
-  methods: mapActions("event", ["fetchEvent"])
+  props: {
+    event: {
+      type: Object,
+      required: true
+    }
+  }
 });
 </script>
 
