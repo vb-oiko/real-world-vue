@@ -3,9 +3,11 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import BaseIcon from "@/components/BaseIcon.vue";
+import BaseInput from "@/components/BaseInput.vue";
 import "nprogress/nprogress.css";
 
 Vue.component("BaseIcon", BaseIcon);
+Vue.component("BaseInput", BaseInput);
 
 Vue.config.productionTip = false;
 
